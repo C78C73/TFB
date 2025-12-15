@@ -11,15 +11,6 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="nav-logo">TASK FORCE BLACK</a>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <span class="sun">☀️</span>
-                <span class="moon">🌙</span>
-            </button>
-            <button class="nav-toggle" id="navToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
@@ -27,6 +18,15 @@
                 <li><a href="merch.html">Merch</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="sun">☀️</span>
+                <span class="moon">🌙</span>
+            </button>
         </div>
     </nav>
 
@@ -44,6 +44,19 @@
                     <button class="filter-btn active" data-filter="all">All</button>
                     <button class="filter-btn" data-filter="videos">Videos</button>
                     <button class="filter-btn" data-filter="images">Images</button>
+                </div>
+
+                <div class="submit-gallery-section">
+                    <div class="submit-card">
+                        <div class="submit-icon">📸</div>
+                        <h3>Submit Your Content</h3>
+                        <p>Got epic operation footage or screenshots? Share your best clips and photos to be featured here!</p>
+                        <a href="#" class="btn btn-secondary btn-disabled" onclick="return false;">
+                            Submit Gallery Content
+                            <span class="external-icon">→</span>
+                        </a>
+                        <p class="submit-note-small"><strong>How it works:</strong> Submit via Google Form → We review → Approved content appears here</p>
+                    </div>
                 </div>
 
                 <div class="gallery-grid" id="galleryGrid">
@@ -86,6 +99,11 @@
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 Task Force Black. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <span>|</span>
+                <a href="terms.html">Terms of Service</a>
+            </div>
         </div>
     </footer>
 
