@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Force Black - Elite Milsim Community</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">TASK FORCE BLACK</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="sun">☀️</span>
+                <span class="moon">🌙</span>
+            </button>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="merch.html">Merch</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <canvas id="particleCanvas"></canvas>
+        <div class="hero-content">
+            <div class="logo-container">
+                <img src="assets/images/logo.png" alt="Task Force Black Logo" class="hero-logo">
+            </div>
+            <h1 class="glitch" data-text="TASK FORCE BLACK">TASK FORCE BLACK</h1>
+            <p class="tagline">Elite Milsim Community - 100+ Strong</p>
+            <div class="cta-buttons">
+                <a href="about.html" class="btn btn-primary">Learn More</a>
+                <a href="contact.html" class="btn btn-secondary">Join Us</a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </section>
+
+    <section class="preview-section">
+        <div class="container">
+            <div class="preview-grid">
+                <div class="preview-card">
+                    <div class="card-icon">🎯</div>
+                    <h3>Mission Focused</h3>
+                    <p>Tactical operations in Arma and Battlefield with 100+ active members</p>
+                </div>
+                <div class="preview-card">
+                    <div class="card-icon">🌍</div>
+                    <h3>Global Community</h3>
+                    <p>Active and prior service members from the USA and worldwide</p>
+                </div>
+                <div class="preview-card">
+                    <div class="card-icon">🤝</div>
+                    <h3>Co-Ed & Inclusive</h3>
+                    <p>Ages 16+ welcome - all backgrounds, one mission</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Task Force Black. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/particles.js"></script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Task Force Black</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">TASK FORCE BLACK</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="sun">☀️</span>
+                <span class="moon">🌙</span>
+            </button>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="merch.html">Merch</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="gallery-main">
+        <section class="gallery-hero">
+            <div class="container">
+                <h1 class="fade-in">Operations Gallery</h1>
+                <p class="subtitle fade-in">Moments from the battlefield</p>
+            </div>
+        </section>
+
+        <section class="gallery-content">
+            <div class="container">
+                <div class="filter-tabs">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="videos">Videos</button>
+                    <button class="filter-btn" data-filter="images">Images</button>
+                </div>
+
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Gallery items will be added here manually -->
+                    <!-- Example video item (uncomment and duplicate to add):
+                    <div class="gallery-item" data-type="videos">
+                        <div class="item-wrapper">
+                            <iframe src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+                            <div class="item-overlay">
+                                <h3>Operation Name</h3>
+                                <p>Date</p>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+
+                    <!-- Example image item (uncomment and duplicate to add):
+                    <div class="gallery-item" data-type="images">
+                        <div class="item-wrapper">
+                            <img src="assets/images/ops/your-image.jpg" alt="Operation">
+                            <div class="item-overlay">
+                                <h3>Operation Name</h3>
+                                <p>Date</p>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">📷</div>
+                    <h2>Gallery Coming Soon</h2>
+                    <p>Operation highlights and battle footage will be posted here.</p>
+                    <p class="submit-note">Want to contribute? Submit your best clips and photos via our <a href="contact.html">contact form</a>!</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Task Force Black. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/theme.js"></script>
+    <script src="js/nav.js"></script>
+    <script>
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const emptyState = document.getElementById('emptyState');
+        const galleryGrid = document.getElementById('galleryGrid');
+
+        if (galleryItems.length === 0) {
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+        }
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.dataset.filter;
+                let visibleCount = 0;
+                
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.dataset.type === filter) {
+                        item.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            });
+        });
+    </script>
+</body>
+</html>
