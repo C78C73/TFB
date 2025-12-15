@@ -10,7 +10,7 @@ Task Force Black is a premier military simulation community focused on tactical 
 
 ### Key Features
 - 🎯 100+ active members worldwide
-- 🌍 Co-ed, ages 16+
+- 🌍 Co-ed and inclusive
 - 🎮 PC, PlayStation, and Xbox platforms
 - 🤝 Real life comes first - we're here to have fun
 - ⛪ Dedicated chaplain for member support

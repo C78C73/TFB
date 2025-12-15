@@ -69,14 +69,17 @@
     padding: 8px 0 8px 25px;
     position: relative;
     color: var(--text-secondary);
+    line-height: 1.6;
 }
 
 .info-block li::before {
     content: '•';
     position: absolute;
     left: 0;
+    top: 8px;
     color: var(--accent);
     font-size: 1.5rem;
+    line-height: 1;
 }
 
 .info-block p {
@@ -138,6 +141,9 @@
 
 .social-icons {
     margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .social-link {
