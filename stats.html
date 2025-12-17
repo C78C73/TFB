@@ -52,21 +52,13 @@
                 <div class="stats-grid">
                     <div class="stat-card pulse-card">
                         <div class="stat-header">
-                            <span class="stat-icon">👥</span>
-                            <span class="stat-title">Total Online</span>
+                            <span class="stat-icon">�</span>
+                            <span class="stat-title">Members Online</span>
                         </div>
-                        <div class="stat-value" id="totalOnline">--</div>
+                        <div class="stat-value" id="statusOnline">--</div>
                         <div class="stat-progress">
                             <div class="progress-bar" id="onlineProgress"></div>
                         </div>
-                    </div>
-
-                    <div class="stat-card">
-                        <div class="stat-header">
-                            <span class="stat-icon">🟢</span>
-                            <span class="stat-title">Online</span>
-                        </div>
-                        <div class="stat-value" id="statusOnline">--</div>
                     </div>
 
                     <div class="stat-card">
@@ -210,23 +202,6 @@
                 <h2>💯 Engagement Metrics</h2>
                 <div class="engagement-grid">
                     <div class="engagement-card">
-                        <h3>Activity Score</h3>
-                        <div class="score-circle" id="activityScore">
-                            <span class="score-value" id="scoreValue">--</span>
-                            <span class="score-label">/100</span>
-                        </div>
-                        <p id="scoreDescription">Calculating...</p>
-                    </div>
-
-                    <div class="engagement-card">
-                        <h3>Community Health</h3>
-                        <div class="health-bar">
-                            <div class="health-fill" id="healthFill"></div>
-                        </div>
-                        <p id="healthPercent">--% of server active</p>
-                    </div>
-
-                    <div class="engagement-card">
                         <h3>Growth Trend</h3>
                         <div class="trend-indicator" id="trendIndicator">
                             <span class="trend-arrow">📊</span>
@@ -259,6 +234,7 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/error-logger.js"></script>
     <script src="js/theme.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/stats.js"></script>

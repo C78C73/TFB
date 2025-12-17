@@ -1,5 +1,5 @@
 // Discord Stats Page - Comprehensive Analytics
-const DISCORD_SERVER_ID = '331875336922988545';
+const DISCORD_SERVER_ID = '1374193582763806781';
 const WIDGET_API = `https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.json`;
 const UPDATE_INTERVAL = 300000; // 5 minutes
 const STORAGE_KEY = 'tfb_discord_stats';
@@ -18,35 +18,64 @@ document.addEventListener('DOMContentLoaded', () => {
 // Fetch Discord stats from API
 async function fetchDiscordStats() {
     try {
+        console.log('[Stats] Fetching Discord data from:', WIDGET_API);
         const response = await fetch(WIDGET_API);
         
         if (!response.ok) {
-            throw new Error('Widget not enabled');
+            const errorMsg = `Widget API returned status ${response.status}: ${response.statusText}`;
+            console.error('[Stats]', errorMsg);
+            throw new Error(errorMsg);
         }
         
         currentData = await response.json();
+        console.log('[Stats] Data received:', {
+            members: currentData.members?.length || 0,
+            online: currentData.presence_count || 0
+        });
         
-        // Update all stats sections
-        updateRealTimeStats(currentData);
-        updateGamingActivity(currentData);
-        updateMembersList(currentData);
-        updateHistoricalStats(currentData);
-        updateEngagementMetrics(currentData);
-        updateServerStatus(currentData);
-        checkMilestones(currentData);
+        // Update all stats sections with error handling for each
+        try { updateRealTimeStats(currentData); } catch (e) { console.error('[Stats] updateRealTimeStats failed:', e); }
+        try { updateGamingActivity(currentData); } catch (e) { console.error('[Stats] updateGamingActivity failed:', e); }
+        try { updateMembersList(currentData); } catch (e) { console.error('[Stats] updateMembersList failed:', e); }
+        try { updateHistoricalStats(currentData); } catch (e) { console.error('[Stats] updateHistoricalStats failed:', e); }
+        try { updateEngagementMetrics(currentData); } catch (e) { console.error('[Stats] updateEngagementMetrics failed:', e); }
+        try { updateServerStatus(currentData); } catch (e) { console.error('[Stats] updateServerStatus failed:', e); }
+        try { checkMilestones(currentData); } catch (e) { console.error('[Stats] checkMilestones failed:', e); }
         
         // Save to localStorage for historical tracking
-        saveStatsToHistory(currentData);
+        try {
+            saveStatsToHistory(currentData);
+        } catch (e) {
+            console.error('[Stats] Failed to save to history:', e);
+        }
         
         // Update last refresh time
-        document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+        const lastUpdateEl = document.getElementById('lastUpdate');
+        if (lastUpdateEl) {
+            lastUpdateEl.textContent = new Date().toLocaleTimeString();
+        }
+        
+        console.log('[Stats] All updates completed successfully');
         
         // Schedule next update
         setTimeout(fetchDiscordStats, UPDATE_INTERVAL);
         
     } catch (error) {
-        console.error('Error fetching Discord stats:', error);
+        console.error('[Stats] Critical error fetching Discord stats:', error);
+        
+        if (window.errorLogger) {
+            window.errorLogger.logError({
+                type: 'Stats Page Error',
+                message: error.message,
+                context: 'fetchDiscordStats',
+                serverID: DISCORD_SERVER_ID
+            });
+        }
+        
         showError();
+        
+        // Retry after 1 minute on error
+        setTimeout(fetchDiscordStats, 60000);
     }
 }
 
@@ -66,9 +95,8 @@ function updateRealTimeStats(data) {
     const gamingCount = members.filter(m => m.game).length;
     const voiceCount = data.channels ? data.channels.length : 0;
     
-    // Update DOM
-    animateValue('totalOnline', onlineCount);
-    animateValue('statusOnline', statusCounts.online);
+    // Update DOM - statusOnline now shows total online count
+    animateValue('statusOnline', onlineCount);
     animateValue('statusIdle', statusCounts.idle);
     animateValue('statusBusy', statusCounts.dnd);
     animateValue('membersGaming', gamingCount);
@@ -76,7 +104,10 @@ function updateRealTimeStats(data) {
     
     // Update progress bar (assuming max 200 members)
     const progressPercent = Math.min((onlineCount / 200) * 100, 100);
-    document.getElementById('onlineProgress').style.width = `${progressPercent}%`;
+    const progressBar = document.getElementById('onlineProgress');
+    if (progressBar) {
+        progressBar.style.width = `${progressPercent}%`;
+    }
 }
 
 // Update gaming activity section
@@ -215,7 +246,12 @@ function updateHistoricalStats(data) {
         hourSamples[i] > 0 ? count / hourSamples[i] : 0
     );
     const busiestHour = hourAverages.indexOf(Math.max(...hourAverages));
-    const busiestTime = `${busiestHour}:00 - ${busiestHour + 1}:00`;
+    
+    // Convert to 12-hour format (compact)
+    const startHour = busiestHour === 0 ? 12 : busiestHour > 12 ? busiestHour - 12 : busiestHour;
+    const endHour = (busiestHour + 1) === 0 ? 12 : (busiestHour + 1) > 12 ? (busiestHour + 1) - 12 : (busiestHour + 1);
+    const period = busiestHour < 12 ? 'AM' : 'PM';
+    const busiestTime = `${startHour}-${endHour} ${period}`;
     
     // Update DOM
     document.getElementById('peakToday').textContent = peakToday;
@@ -340,49 +376,30 @@ function generateHeatmap() {
 function updateEngagementMetrics(data) {
     const onlineCount = data.presence_count || 0;
     const members = data.members || [];
-    const gamingCount = members.filter(m => m.game).length;
-    
-    // Calculate activity score (0-100)
-    const baseScore = Math.min((onlineCount / 100) * 40, 40); // Max 40 points for online count
-    const gamingScore = Math.min((gamingCount / onlineCount) * 30, 30); // Max 30 points for gaming %
-    const engagementScore = Math.min((gamingCount / 20) * 30, 30); // Max 30 points for total gaming
-    const activityScore = Math.round(baseScore + gamingScore + engagementScore);
-    
-    document.getElementById('scoreValue').textContent = activityScore;
-    document.getElementById('scoreDescription').textContent = 
-        activityScore >= 80 ? '🔥 Extremely Active!' :
-        activityScore >= 60 ? '✅ Very Active' :
-        activityScore >= 40 ? '🟢 Active' :
-        activityScore >= 20 ? '🟡 Moderate' : '⚪ Quiet';
-    
-    // Community health (% of typical peak)
-    const history = getHistoricalData();
-    const recentPeaks = history.slice(-50).map(s => s.onlineCount);
-    const avgPeak = recentPeaks.length > 0 ? 
-        Math.max(...recentPeaks) : 100;
-    const healthPercent = Math.min(Math.round((onlineCount / avgPeak) * 100), 100);
-    
-    const healthFill = document.getElementById('healthFill');
-    healthFill.style.width = `${healthPercent}%`;
-    document.getElementById('healthPercent').textContent = `${healthPercent}% of peak capacity`;
     
     // Growth trend
+    const history = getHistoricalData();
     const weekAgo = history.slice(-100);
-    const recentAvg = weekAgo.slice(-20).reduce((sum, s) => sum + s.onlineCount, 0) / 20;
-    const olderAvg = weekAgo.slice(0, 20).reduce((sum, s) => sum + s.onlineCount, 0) / 20;
     
-    const trendIndicator = document.getElementById('trendIndicator');
-    const diff = recentAvg - olderAvg;
-    
-    if (diff > 5) {
-        trendIndicator.className = 'trend-indicator up';
-        trendIndicator.innerHTML = '<span class="trend-arrow">📈</span><span class="trend-text">Growing</span>';
-    } else if (diff < -5) {
-        trendIndicator.className = 'trend-indicator down';
-        trendIndicator.innerHTML = '<span class="trend-arrow">📉</span><span class="trend-text">Declining</span>';
-    } else {
-        trendIndicator.className = 'trend-indicator stable';
-        trendIndicator.innerHTML = '<span class="trend-arrow">➡️</span><span class="trend-text">Stable</span>';
+    if (weekAgo.length >= 40) {
+        const recentAvg = weekAgo.slice(-20).reduce((sum, s) => sum + s.onlineCount, 0) / 20;
+        const olderAvg = weekAgo.slice(0, 20).reduce((sum, s) => sum + s.onlineCount, 0) / 20;
+        
+        const trendIndicator = document.getElementById('trendIndicator');
+        if (trendIndicator) {
+            const diff = recentAvg - olderAvg;
+            
+            if (diff > 5) {
+                trendIndicator.className = 'trend-indicator up';
+                trendIndicator.innerHTML = '<span class="trend-arrow">📈</span><span class="trend-text">Growing</span>';
+            } else if (diff < -5) {
+                trendIndicator.className = 'trend-indicator down';
+                trendIndicator.innerHTML = '<span class="trend-arrow">📉</span><span class="trend-text">Declining</span>';
+            } else {
+                trendIndicator.className = 'trend-indicator stable';
+                trendIndicator.innerHTML = '<span class="trend-arrow">➡️</span><span class="trend-text">Stable</span>';
+            }
+        }
     }
 }
 
