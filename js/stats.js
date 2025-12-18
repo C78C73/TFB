@@ -308,19 +308,52 @@ function initActivityChart() {
 function updateActivityChart(history) {
     if (!activityChart) return;
     
-    // Last 24 hours of data
-    const dayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const recentHistory = history.filter(s => new Date(s.timestamp) >= dayAgo);
+    // Last 12 hours of data
+    const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
+    const recentHistory = history.filter(s => new Date(s.timestamp) >= twelveHoursAgo);
     
-    const labels = recentHistory.map(s => {
-        const date = new Date(s.timestamp);
-        return `${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}`;
-    });
+    // Group into 30-minute intervals aligned to :00 and :30
+    const intervals = [];
+    const intervalData = [];
+    const now = new Date();
     
-    const data = recentHistory.map(s => s.onlineCount);
+    // Round current time down to nearest 30-minute mark
+    const currentMinutes = now.getMinutes();
+    const roundedMinutes = currentMinutes >= 30 ? 30 : 0;
+    now.setMinutes(roundedMinutes, 0, 0);
     
-    activityChart.data.labels = labels;
-    activityChart.data.datasets[0].data = data;
+    const intervalMs = 30 * 60 * 1000; // 30 minutes in milliseconds
+    
+    for (let i = 24; i >= 0; i--) { // 24 intervals = 12 hours
+        const intervalEnd = new Date(now.getTime() - (i * intervalMs));
+        const intervalStart = new Date(intervalEnd.getTime() - intervalMs);
+        
+        // Find all data points in this interval
+        const pointsInInterval = recentHistory.filter(s => {
+            const timestamp = new Date(s.timestamp).getTime();
+            return timestamp >= intervalStart.getTime() && timestamp < intervalEnd.getTime();
+        });
+        
+        // Average the values in this interval
+        if (pointsInInterval.length > 0) {
+            const avg = Math.round(
+                pointsInInterval.reduce((sum, s) => sum + s.onlineCount, 0) / pointsInInterval.length
+            );
+            intervalData.push(avg);
+        } else {
+            intervalData.push(null); // No data for this interval
+        }
+        
+        // Format label in 12-hour time (always :00 or :30)
+        let hours = intervalEnd.getHours();
+        const minutes = intervalEnd.getMinutes();
+        const period = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        intervals.push(`${hours}:${String(minutes).padStart(2, '0')} ${period}`);
+    }
+    
+    activityChart.data.labels = intervals;
+    activityChart.data.datasets[0].data = intervalData;
     activityChart.update();
 }
 
