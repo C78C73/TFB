@@ -1,6 +1,6 @@
 .hero {
     position: relative;
-    height: 100vh;
+    height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -213,15 +213,29 @@
     background: var(--bg-secondary);
 }
 
+/* Use the same container/grid as other pages for consistency */
 .preview-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 32px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 32px;
+}
+
+@media (min-width: 1400px) {
+    .preview-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1400px;
+        padding: 0;
+    }
+}
+}
 }
 
 .preview-card {
     background: var(--bg-tertiary);
-    padding: 40px 30px;
+    padding: 28px 18px;
     border-radius: 10px;
     text-align: center;
     transition: all 0.3s;
@@ -235,13 +249,13 @@
 }
 
 .card-icon {
-    font-size: 3rem;
-    margin-bottom: 20px;
+    font-size: 2.2rem;
+    margin-bottom: 14px;
 }
 
 .preview-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
     color: var(--text-primary);
 }
 

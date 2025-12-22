@@ -93,7 +93,29 @@ function updateRealTimeStats(data) {
     
     // Count gaming and voice
     const gamingCount = members.filter(m => m.game).length;
-    const voiceCount = data.channels ? data.channels.length : 0;
+    
+    // Count members in voice channels - Discord widget API doesn't provide voice channel member data
+    // Instead, we'll count members who are in any voice channel based on their presence
+    let voiceCount = 0;
+    console.log('[Stats] Full data structure:', JSON.stringify(data, null, 2));
+    
+    if (data.channels && Array.isArray(data.channels)) {
+        // Try to count from channel members
+        data.channels.forEach(channel => {
+            console.log('[Stats] Channel:', channel.name, 'ID:', channel.id);
+            if (channel.members && Array.isArray(channel.members)) {
+                voiceCount += channel.members.length;
+            }
+        });
+    }
+    
+    // If no voice data in channels, count from members with voice_state
+    if (voiceCount === 0 && members.length > 0) {
+        voiceCount = members.filter(m => m.channel_id).length;
+        console.log('[Stats] Counted from member channel_id:', voiceCount);
+    }
+    
+    console.log('[Stats] Total voice count:', voiceCount);
     
     // Update DOM - statusOnline now shows total online count
     animateValue('statusOnline', onlineCount);
@@ -185,8 +207,15 @@ function updateGamingActivity(data) {
 
 // Update members list with avatars
 function updateMembersList(data) {
-    const members = data.members || [];
     const membersGrid = document.getElementById('membersGrid');
+    
+    // Skip if element doesn't exist on this page
+    if (!membersGrid) {
+        console.log('[Stats] membersGrid element not found, skipping member list update');
+        return;
+    }
+    
+    const members = data.members || [];
     
     if (members.length === 0) {
         membersGrid.innerHTML = '<p>No members online</p>';
@@ -276,12 +305,16 @@ function initActivityChart() {
                 borderColor: '#2ecc71',
                 backgroundColor: 'rgba(46, 204, 113, 0.1)',
                 tension: 0.4,
-                fill: true
+                fill: true,
+                spanGaps: true,
+                pointRadius: 4,
+                pointHoverRadius: 6
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            aspectRatio: 2.5,
             plugins: {
                 legend: {
                     display: false
@@ -292,11 +325,19 @@ function initActivityChart() {
                     beginAtZero: true,
                     grid: {
                         color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
                     }
                 },
                 x: {
                     grid: {
                         color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        maxRotation: 45,
+                        minRotation: 45
                     }
                 }
             }
@@ -308,52 +349,72 @@ function initActivityChart() {
 function updateActivityChart(history) {
     if (!activityChart) return;
     
+    console.log('[Stats] Updating chart with history length:', history.length);
+    
     // Last 12 hours of data
     const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
     const recentHistory = history.filter(s => new Date(s.timestamp) >= twelveHoursAgo);
+    
+    console.log('[Stats] Recent history (12h):', recentHistory.length, 'points');
     
     // Group into 30-minute intervals aligned to :00 and :30
     const intervals = [];
     const intervalData = [];
     const now = new Date();
     
-    // Round current time down to nearest 30-minute mark
-    const currentMinutes = now.getMinutes();
-    const roundedMinutes = currentMinutes >= 30 ? 30 : 0;
-    now.setMinutes(roundedMinutes, 0, 0);
-    
-    const intervalMs = 30 * 60 * 1000; // 30 minutes in milliseconds
-    
-    for (let i = 24; i >= 0; i--) { // 24 intervals = 12 hours
-        const intervalEnd = new Date(now.getTime() - (i * intervalMs));
-        const intervalStart = new Date(intervalEnd.getTime() - intervalMs);
-        
-        // Find all data points in this interval
-        const pointsInInterval = recentHistory.filter(s => {
-            const timestamp = new Date(s.timestamp).getTime();
-            return timestamp >= intervalStart.getTime() && timestamp < intervalEnd.getTime();
+    // If we have very few data points, just plot them directly
+    if (recentHistory.length < 10) {
+        console.log('[Stats] Using direct plotting due to sparse data');
+        recentHistory.forEach(stat => {
+            const time = new Date(stat.timestamp);
+            let hours = time.getHours();
+            const minutes = time.getMinutes();
+            const period = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            intervals.push(`${hours}:${String(minutes).padStart(2, '0')} ${period}`);
+            intervalData.push(stat.onlineCount);
         });
+    } else {
+        // Round current time down to nearest 30-minute mark
+        const currentMinutes = now.getMinutes();
+        const roundedMinutes = currentMinutes >= 30 ? 30 : 0;
+        now.setMinutes(roundedMinutes, 0, 0);
         
-        // Average the values in this interval
-        if (pointsInInterval.length > 0) {
-            const avg = Math.round(
-                pointsInInterval.reduce((sum, s) => sum + s.onlineCount, 0) / pointsInInterval.length
-            );
-            intervalData.push(avg);
-        } else {
-            intervalData.push(null); // No data for this interval
+        const intervalMs = 30 * 60 * 1000; // 30 minutes in milliseconds
+        
+        for (let i = 24; i >= 0; i--) { // 24 intervals = 12 hours
+            const intervalEnd = new Date(now.getTime() - (i * intervalMs));
+            const intervalStart = new Date(intervalEnd.getTime() - intervalMs);
+            
+            // Find all data points in this interval
+            const pointsInInterval = recentHistory.filter(s => {
+                const timestamp = new Date(s.timestamp).getTime();
+                return timestamp >= intervalStart.getTime() && timestamp < intervalEnd.getTime();
+            });
+            
+            // Average the values in this interval
+            if (pointsInInterval.length > 0) {
+                const avg = Math.round(
+                    pointsInInterval.reduce((sum, s) => sum + s.onlineCount, 0) / pointsInInterval.length
+                );
+                intervalData.push(avg);
+            } else {
+                intervalData.push(null); // No data for this interval
+            }
+            
+            // Format label in 12-hour time (always :00 or :30)
+            let hours = intervalEnd.getHours();
+            const minutes = intervalEnd.getMinutes();
+            const period = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            intervals.push(`${hours}:${String(minutes).padStart(2, '0')} ${period}`);
         }
-        
-        // Format label in 12-hour time (always :00 or :30)
-        let hours = intervalEnd.getHours();
-        const minutes = intervalEnd.getMinutes();
-        const period = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-        intervals.push(`${hours}:${String(minutes).padStart(2, '0')} ${period}`);
     }
     
     activityChart.data.labels = intervals;
     activityChart.data.datasets[0].data = intervalData;
+    console.log('[Stats] Chart labels:', intervals.length, 'intervals:', intervals);
+    console.log('[Stats] Chart data:', intervalData);
     activityChart.update();
 }
 
@@ -386,8 +447,33 @@ function generateHeatmap() {
         });
     });
     
-    // Generate HTML
+    // Generate HTML with hour headers
     let heatmapHtml = '<div style="display: grid; gap: 10px;">';
+    
+    // Add legend at the top
+    heatmapHtml += `<div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-bottom: 10px;">`;
+    heatmapHtml += `<div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px;">Shows average online members for each hour of the week. Darker = More active.</div>`;
+    heatmapHtml += `<div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">`;
+    heatmapHtml += `<span style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 600;">Activity:</span>`;
+    for (let i = 0; i <= 5; i++) {
+        const label = i === 0 ? 'None' : i === 5 ? 'High' : '';
+        heatmapHtml += `<div style="display: flex; align-items: center; gap: 5px;">`;
+        heatmapHtml += `<div class="heatmap-cell activity-${i}" style="width: 20px; height: 20px; min-width: 20px; min-height: 20px;"></div>`;
+        if (label) heatmapHtml += `<span style="font-size: 0.75rem; color: var(--text-secondary);">${label}</span>`;
+        heatmapHtml += `</div>`;
+    }
+    heatmapHtml += `</div></div>`;
+    
+    // Add hour header row
+    heatmapHtml += `<div style="display: grid; grid-template-columns: 50px repeat(24, 1fr); gap: 4px; align-items: center;">`;
+    heatmapHtml += `<div style="font-size: 0.7rem; color: var(--text-secondary); font-weight: 600;">Hour →</div>`;
+    for (let hour = 0; hour < 24; hour++) {
+        const displayHour = hour === 0 ? '12a' : hour < 12 ? `${hour}a` : hour === 12 ? '12p' : `${hour-12}p`;
+        heatmapHtml += `<div style="font-size: 0.6rem; color: var(--text-secondary); text-align: center;" title="${hour}:00">${displayHour}</div>`;
+    }
+    heatmapHtml += '</div>';
+    
+    // Add day rows
     days.forEach((dayName, day) => {
         heatmapHtml += `<div style="display: grid; grid-template-columns: 50px repeat(24, 1fr); gap: 4px; align-items: center;">`;
         heatmapHtml += `<div style="font-size: 0.8rem; color: var(--text-secondary);">${dayName}</div>`;
