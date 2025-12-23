@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Stats - Task Force Black</title>
+    <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
+    <link rel="stylesheet" href="css/main.css?v=1">
+    <link rel="stylesheet" href="css/stats.css?v=1">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">TASK FORCE BLACK</a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="merch.html">Merch</a></li>
+                <li><a href="stats.html" class="active">Stats</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <span class="sun">☀️</span>
+                <span class="moon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="stats-main">
+        <!-- Hero Section -->
+        <section class="stats-hero">
+            <div class="container">
+                <h1 class="fade-in">Discord Server Stats</h1>
+                <div class="server-status-badge" id="serverStatusBadge">
+                    <span class="status-icon">🔄</span>
+                    <span class="status-text">Loading...</span>
+                </div>
+                <p class="last-update">Last updated: <span id="lastUpdate">Never</span></p>
+            </div>
+        </section>
+
+        <!-- Real-Time Stats -->
+        <section class="stats-section">
+            <div class="container">
+                <h2>📊 Real-Time Stats</h2>
+                <div class="stats-grid">
+                    <div class="stat-card pulse-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">�</span>
+                            <span class="stat-title">Members Online</span>
+                        </div>
+                        <div class="stat-value" id="statusOnline">--</div>
+                        <div class="stat-progress">
+                            <div class="progress-bar" id="onlineProgress"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🟡</span>
+                            <span class="stat-title">Idle</span>
+                        </div>
+                        <div class="stat-value" id="statusIdle">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🔴</span>
+                            <span class="stat-title">Busy</span>
+                        </div>
+                        <div class="stat-value" id="statusBusy">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🎮</span>
+                            <span class="stat-title">Gaming</span>
+                        </div>
+                        <div class="stat-value" id="membersGaming">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🎤</span>
+                            <span class="stat-title">In Voice</span>
+                        </div>
+                        <div class="stat-value" id="inVoice">--</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gaming Activity -->
+        <section class="stats-section">
+            <div class="container">
+                <h2>🎮 Gaming Activity</h2>
+                <div class="operation-detector" id="operationDetector" style="display: none;">
+                    <span class="op-icon">🔥</span>
+                    <span class="op-text" id="operationText"></span>
+                </div>
+                
+                <div class="gaming-grid">
+                    <div class="game-card featured">
+                        <h3>Most Popular Game</h3>
+                        <div class="game-name" id="popularGame">--</div>
+                        <div class="game-count" id="popularGameCount">0 players</div>
+                    </div>
+
+                    <div class="game-card">
+                        <h3>🎯 Arma Reforger</h3>
+                        <div class="game-count" id="armaCount">0 players</div>
+                        <div class="player-list" id="armaPlayers"></div>
+                    </div>
+
+                    <div class="game-card">
+                        <h3>💥 Battlefield</h3>
+                        <div class="game-count" id="bfCount">0 players</div>
+                        <div class="player-list" id="bfPlayers"></div>
+                    </div>
+
+                    <div class="game-card">
+                        <h3>🎲 Other Games</h3>
+                        <div id="otherGames" class="other-games-list">--</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historical Stats -->
+        <section class="stats-section">
+            <div class="container">
+                <h2>📈 Historical Stats</h2>
+                <div class="stats-grid">
+                    <div class="stat-card historical">
+                        <div class="stat-header">
+                            <span class="stat-icon">🏆</span>
+                            <span class="stat-title">Peak Today</span>
+                        </div>
+                        <div class="stat-value" id="peakToday">--</div>
+                    </div>
+
+                    <div class="stat-card historical">
+                        <div class="stat-header">
+                            <span class="stat-icon">📅</span>
+                            <span class="stat-title">Peak This Week</span>
+                        </div>
+                        <div class="stat-value" id="peakWeek">--</div>
+                    </div>
+
+                    <div class="stat-card historical">
+                        <div class="stat-header">
+                            <span class="stat-icon">📊</span>
+                            <span class="stat-title">Average Online</span>
+                        </div>
+                        <div class="stat-value" id="avgOnline">--</div>
+                    </div>
+
+                    <div class="stat-card historical">
+                        <div class="stat-header">
+                            <span class="stat-icon">⏰</span>
+                            <span class="stat-title">Busiest Time</span>
+                        </div>
+                        <div class="stat-value" id="busiestTime">--</div>
+                    </div>
+                </div>
+
+                <!-- Activity Timeline Chart -->
+                <div class="chart-container">
+                    <h3>Activity Timeline (Last 12 Hours)</h3>
+                    <canvas id="activityChart"></canvas>
+                </div>
+
+                <!-- Activity Heatmap -->
+                <div class="heatmap-container">
+                    <h3>Weekly Activity Heatmap</h3>
+                    <div id="activityHeatmap" class="heatmap">
+                        <!-- Heatmap will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Milestones -->
+        <div class="milestone-banner" id="milestoneBanner" style="display: none;">
+            <div class="container">
+                <span class="milestone-icon">🎉</span>
+                <span class="milestone-text" id="milestoneText"></span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <img src="assets/images/logo.jpg" alt="Task Force Black" class="footer-logo">
+            <p>&copy; 2025 Task Force Black. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <span>|</span>
+                <a href="terms.html">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="js/error-logger.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/stats.js"></script>
+</body>
+</html>
