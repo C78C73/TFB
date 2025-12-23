@@ -368,8 +368,8 @@
 
 .heatmap {
     display: grid;
-    grid-template-columns: repeat(24, 1fr);
     gap: 4px;
+    overflow-x: auto;
 }
 
 .heatmap-cell {
@@ -378,11 +378,14 @@
     transition: all 0.3s;
     cursor: pointer;
     position: relative;
+    min-width: 12px;
+    min-height: 12px;
 }
 
 .heatmap-cell:hover {
-    transform: scale(1.2);
+    transform: scale(1.3);
     z-index: 10;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
 }
 
 .heatmap-cell.activity-0 { background: var(--bg-secondary); }
@@ -538,7 +541,12 @@
     }
 
     .heatmap {
-        grid-template-columns: repeat(12, 1fr);
+        overflow-x: scroll;
+    }
+    
+    .heatmap-cell {
+        min-width: 10px;
+        min-height: 10px;
     }
 }
 
