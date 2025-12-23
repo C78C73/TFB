@@ -1,10 +1,11 @@
 .hero {
     position: relative;
-    height: 70vh;
+    min-height: calc(100vh - 70px); /* full viewport minus fixed navbar */
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding-top: 70px; /* push content below navbar so logo is visible */
 }
 
 #particleCanvas {
@@ -20,11 +21,17 @@
     position: relative;
     z-index: 2;
     text-align: center;
-    padding: 20px;
+    padding: 0 40px;
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .logo-container {
-    margin-bottom: 30px;
+    margin-bottom: 18px;
     animation: float 3s ease-in-out infinite;
 }
 
@@ -35,12 +42,12 @@
 }
 
 .glitch {
-    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-size: clamp(2.5rem, 7vw, 4.5rem);
     font-weight: 900;
     text-transform: uppercase;
     position: relative;
     letter-spacing: 3px;
-    margin: 20px 0;
+    margin: 10px 0 12px 0;
 }
 
 .glitch::before,
@@ -87,17 +94,18 @@
 }
 
 .tagline {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
-    margin-bottom: 40px;
+    margin-bottom: 28px;
     letter-spacing: 2px;
 }
 
 .cta-buttons {
     display: flex;
-    gap: 20px;
+    gap: 18px;
     justify-content: center;
     flex-wrap: wrap;
+    margin-bottom: 8px;
 }
 
 .discord-stats {
@@ -209,39 +217,40 @@
 }
 
 .preview-section {
-    padding: 100px 0;
+    padding: 40px 0 40px 0;
     background: var(--bg-secondary);
 }
 
 /* Use the same container/grid as other pages for consistency */
 .preview-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 32px;
-        width: 100%;
-        margin: 0 auto;
-        padding: 0 32px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
 }
 
-@media (min-width: 1400px) {
+@media (min-width: 1200px) {
     .preview-grid {
         grid-template-columns: repeat(3, 1fr);
-        max-width: 1400px;
+        max-width: 1200px;
         padding: 0;
     }
 }
 }
 }
 
-.preview-card {
-    background: var(--bg-tertiary);
-    padding: 28px 18px;
-    border-radius: 10px;
-    text-align: center;
-    transition: all 0.3s;
-    border: 1px solid var(--border);
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
 }
-
 .preview-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 10px 30px var(--shadow);
@@ -259,38 +268,47 @@
     color: var(--text-primary);
 }
 
-.preview-card p {
-    color: var(--text-secondary);
+.preview-card {
+    background: var(--bg-tertiary);
+    padding: 32px 22px 28px 22px;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s;
+    border: 1px solid var(--border);
+    min-height: 160px;
+}
+    .preview-grid {
+        grid-template-columns: 1fr;
+        padding: 0 10px;
+    }
 }
 
 @media (max-width: 768px) {
     .hero-logo {
         width: 150px;
     }
-
     .cta-buttons {
         flex-direction: column;
         align-items: center;
     }
-
     .cta-buttons .btn {
         width: 200px;
     }
-
     .discord-stats {
         flex-direction: column;
         align-items: center;
         gap: 15px;
     }
-
     .stat-card {
         width: 100%;
         max-width: 250px;
     }
-
     .discord-widget iframe {
         width: 100%;
         max-width: 350px;
         height: 450px;
+    }
+    .preview-section {
+        padding: 40px 0 30px 0;
     }
 }
