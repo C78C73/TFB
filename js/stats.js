@@ -357,7 +357,7 @@ function updateActivityChart(history) {
     
     console.log('[Stats] Recent history (12h):', recentHistory.length, 'points');
     
-    // Group into 30-minute intervals aligned to :00 and :30
+    // Group into 15-minute intervals aligned to :00, :15, :30, :45
     const intervals = [];
     const intervalData = [];
     const now = new Date();
@@ -375,14 +375,14 @@ function updateActivityChart(history) {
             intervalData.push(stat.onlineCount);
         });
     } else {
-        // Round current time down to nearest 30-minute mark
+        // Round current time down to nearest 15-minute mark
         const currentMinutes = now.getMinutes();
-        const roundedMinutes = currentMinutes >= 30 ? 30 : 0;
+        const roundedMinutes = Math.floor(currentMinutes / 15) * 15;
         now.setMinutes(roundedMinutes, 0, 0);
         
-        const intervalMs = 30 * 60 * 1000; // 30 minutes in milliseconds
+        const intervalMs = 15 * 60 * 1000; // 15 minutes in milliseconds
         
-        for (let i = 24; i >= 0; i--) { // 24 intervals = 12 hours
+        for (let i = 48; i >= 0; i--) { // 48 intervals = 12 hours
             const intervalEnd = new Date(now.getTime() - (i * intervalMs));
             const intervalStart = new Date(intervalEnd.getTime() - intervalMs);
             
@@ -402,7 +402,7 @@ function updateActivityChart(history) {
                 intervalData.push(null); // No data for this interval
             }
             
-            // Format label in 12-hour time (always :00 or :30)
+            // Format label in 12-hour time (always :00, :15, :30, or :45)
             let hours = intervalEnd.getHours();
             const minutes = intervalEnd.getMinutes();
             const period = hours >= 12 ? 'PM' : 'AM';
@@ -480,7 +480,15 @@ function generateHeatmap() {
         
         for (let hour = 0; hour < 24; hour++) {
             const avg = hourData[day][hour];
-            const level = maxAvg > 0 ? Math.min(Math.floor((avg / maxAvg) * 5), 5) : 0;
+            // Boost lower values so more cells show as active:
+            // - normalize by maxAvg
+            // - apply square-root curve to brighten mid activity
+            // - ensure any non-zero average shows at least level 1
+            let level = 0;
+            if (maxAvg > 0 && avg > 0) {
+                const ratio = Math.min(avg / maxAvg, 1);
+                level = Math.min(Math.floor(Math.sqrt(ratio) * 5) || 1, 5);
+            }
             heatmapHtml += `<div class="heatmap-cell activity-${level}" title="${dayName} ${hour}:00 - Avg: ${Math.round(avg)}"></div>`;
         }
         
