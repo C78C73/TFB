@@ -135,6 +135,15 @@
     margin: 10px 0;
 }
 
+/* Arma server name/map can be long; allow wrapping and shrink font */
+.stat-value.arma-text {
+    font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+    line-height: 1.15;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
 .pulse-card .stat-value {
     animation: pulse 2s ease-in-out infinite;
 }
