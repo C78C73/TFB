@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Server Stats - Task Force Black</title>
+    <meta name="tfb-arma-status-api" content="arma-status.json">
     <link rel="icon" type="image/jpeg" href="assets/images/logo.jpg">
     <link rel="stylesheet" href="css/main.css?v=1">
     <link rel="stylesheet" href="css/stats.css?v=1">
@@ -127,6 +128,64 @@
                     <div class="game-card">
                         <h3>🎲 Other Games</h3>
                         <div id="otherGames" class="other-games-list">--</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arma Reforger Server -->
+        <section class="stats-section" id="armaServerSection">
+            <div class="container">
+                <h2>🖥️ Arma Reforger Server</h2>
+                <p class="last-update">Last updated: <span id="armaSrvLastUpdate">Never</span></p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🟢</span>
+                            <span class="stat-title">Status</span>
+                        </div>
+                        <div class="stat-value" id="armaSrvStatus">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🏷️</span>
+                            <span class="stat-title">Server Name</span>
+                        </div>
+                        <div class="stat-value" id="armaSrvName">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">👥</span>
+                            <span class="stat-title">Players</span>
+                        </div>
+                        <div class="stat-value" id="armaSrvPlayers">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🗺️</span>
+                            <span class="stat-title">Map</span>
+                        </div>
+                        <div class="stat-value" id="armaSrvMap">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">📡</span>
+                            <span class="stat-title">Ping</span>
+                        </div>
+                        <div class="stat-value" id="armaSrvPing">--</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-icon">🔗</span>
+                            <span class="stat-title">Connect</span>
+                        </div>
+                        <div class="stat-value" id="armaSrvConnect">--</div>
                     </div>
                 </div>
             </div>

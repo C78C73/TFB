@@ -27,6 +27,32 @@ Task Force Black is a premier military simulation community focused on tactical 
 - **Merchandise:** [CustomInk Store](https://www.customink.com/g/dwu0-00d0-te8u)
 - **Twitter:** [@TF_Black_PMC](https://x.com/TF_Black_PMC)
 
+## Arma Reforger Server Stats (Website)
+
+The site can display live Arma Reforger server status on the Stats page.
+
+### GitHub Pages-only (recommended for this repo)
+
+Because game queries are UDP and browsers only support HTTP(S), this repo uses a scheduled GitHub Action to query the server and write a static JSON file that the Stats page can fetch.
+
+- Output file: [arma-status.json](arma-status.json)
+- Workflow: [.github/workflows/arma-status.yml](.github/workflows/arma-status.yml)
+- Script: [scripts/update-arma-status.cjs](scripts/update-arma-status.cjs)
+
+To enable it:
+1. In GitHub repo settings → **Secrets and variables** → **Actions** → **Secrets**, add:
+	 - `ARMA_HOST` (required)
+	 - `ARMA_QUERY_PORT` (recommended)
+2. Make sure A2S is enabled in the Arma Reforger server config (BI wiki: `a2s`).
+
+Notes:
+- Arma Reforger does not provide player names via A2S; you’ll only get player counts.
+- Some hosted environments block inbound UDP replies. If the workflow always writes `ok:false`, the fix is usually running a **self-hosted GitHub Actions runner** on a VPS (or the same network as the game server).
+
+### Optional: separate backend API
+
+If you prefer a traditional API, a small Express service scaffold is available in [server/README.md](server/README.md).
+
 ---
 
 © 2025 Task Force Black. All rights reserved.
