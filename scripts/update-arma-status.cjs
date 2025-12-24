@@ -23,7 +23,7 @@ async function main() {
   const port = process.env.ARMA_QUERY_PORT ? Number(process.env.ARMA_QUERY_PORT) : undefined;
   const givenPortOnly = asBool(process.env.ARMA_GIVEN_PORT_ONLY, true);
 
-  const outFile = path.resolve(process.cwd(), 'arma-status.json');
+  const outFile = path.resolve(__dirname, '..', 'arma-status.json');
 
   if (!host) {
     const payload = { ok: false, timestamp: Date.now(), error: 'Missing ARMA_HOST' };
