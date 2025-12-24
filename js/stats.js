@@ -4,6 +4,9 @@ const WIDGET_API = `https://discord.com/api/guilds/${DISCORD_SERVER_ID}/widget.j
 const UPDATE_INTERVAL = 300000; // 5 minutes
 const STORAGE_KEY = 'tfb_discord_stats';
 
+const ARMA_STATUS_REFRESH_MS = 60000; // 1 minute
+let armaStatusTimer = null;
+
 let activityChart = null;
 let currentData = null;
 
@@ -13,7 +16,102 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchDiscordStats();
     initActivityChart();
     generateHeatmap();
+
+    // Arma server status is fetched from a backend HTTPS endpoint (browsers can't query UDP).
+    fetchArmaServerStatus();
 });
+
+function getArmaStatusApiUrl() {
+    const meta = document.querySelector('meta[name="tfb-arma-status-api"]');
+    const url = (meta?.getAttribute('content') || '').trim();
+    return url.length > 0 ? url : null;
+}
+
+function setArmaText(id, value) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = value;
+}
+
+function setArmaLastUpdate(ts) {
+    const el = document.getElementById('armaSrvLastUpdate');
+    if (!el) return;
+    el.textContent = ts ? new Date(ts).toLocaleTimeString() : 'Never';
+}
+
+function renderArmaOffline(reasonText = 'Offline') {
+    setArmaText('armaSrvStatus', reasonText);
+    setArmaText('armaSrvName', '--');
+    setArmaText('armaSrvPlayers', '--');
+    setArmaText('armaSrvMap', '--');
+    setArmaText('armaSrvPing', '--');
+    setArmaText('armaSrvPassword', '--');
+    setArmaText('armaSrvConnect', '--');
+}
+
+function scheduleNextArmaFetch() {
+    if (armaStatusTimer) {
+        clearTimeout(armaStatusTimer);
+    }
+    armaStatusTimer = setTimeout(fetchArmaServerStatus, ARMA_STATUS_REFRESH_MS);
+}
+
+async function fetchArmaServerStatus() {
+    const apiUrl = getArmaStatusApiUrl();
+    if (!apiUrl) {
+        renderArmaOffline('Not configured');
+        setArmaLastUpdate(null);
+        return;
+    }
+
+    try {
+        const res = await fetch(apiUrl, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' },
+            cache: 'no-store'
+        });
+
+        if (!res.ok) {
+            throw new Error(`HTTP ${res.status} ${res.statusText}`);
+        }
+
+        const payload = await res.json();
+
+        // Expected schema from the companion API:
+        // { ok: true, timestamp, state: { name, map, numplayers, maxplayers, password, ping, connect } }
+        const state = payload?.state || null;
+        const ok = payload?.ok === true && !!state;
+
+        if (!ok) {
+            renderArmaOffline('Unavailable');
+            setArmaLastUpdate(payload?.timestamp || Date.now());
+            scheduleNextArmaFetch();
+            return;
+        }
+
+        const numPlayers = Number.isFinite(state.numplayers) ? state.numplayers : null;
+        const maxPlayers = Number.isFinite(state.maxplayers) ? state.maxplayers : null;
+
+        setArmaText('armaSrvStatus', 'Online');
+        setArmaText('armaSrvName', state.name || '--');
+        setArmaText(
+            'armaSrvPlayers',
+            numPlayers === null ? '--' : maxPlayers === null ? `${numPlayers}` : `${numPlayers}/${maxPlayers}`
+        );
+        setArmaText('armaSrvMap', state.map || '--');
+        setArmaText('armaSrvPing', Number.isFinite(state.ping) ? `${Math.round(state.ping)} ms` : '--');
+        setArmaText('armaSrvPassword', state.password === true ? 'Yes' : state.password === false ? 'No' : '--');
+        setArmaText('armaSrvConnect', state.connect || '--');
+        setArmaLastUpdate(payload?.timestamp || Date.now());
+
+        scheduleNextArmaFetch();
+    } catch (err) {
+        console.error('[Stats] Failed to fetch Arma server status:', err);
+        renderArmaOffline('Offline');
+        setArmaLastUpdate(Date.now());
+        scheduleNextArmaFetch();
+    }
+}
 
 // Fetch Discord stats from API
 async function fetchDiscordStats() {
