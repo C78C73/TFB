@@ -46,7 +46,6 @@ function renderArmaOffline(reasonText = 'Offline') {
     setArmaText('armaSrvMap', '--');
     setArmaText('armaSrvPing', '--');
     setArmaText('armaSrvPassword', '--');
-    setArmaText('armaSrvConnect', '--');
 }
 
 function scheduleNextArmaFetch() {
@@ -101,7 +100,6 @@ async function fetchArmaServerStatus() {
         setArmaText('armaSrvMap', state.map || '--');
         setArmaText('armaSrvPing', Number.isFinite(state.ping) ? `${Math.round(state.ping)} ms` : '--');
         setArmaText('armaSrvPassword', state.password === true ? 'Yes' : state.password === false ? 'No' : '--');
-        setArmaText('armaSrvConnect', state.connect || '--');
         setArmaLastUpdate(payload?.timestamp || Date.now());
 
         scheduleNextArmaFetch();
