@@ -1,0 +1,45 @@
+name: Update Arma Reforger Status
+
+on:
+  schedule:
+    # GitHub cron minimum granularity is 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: arma-status
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install GameDig
+        run: npm install gamedig@5.3.2
+
+      - name: Query server and write arma-status.json
+        env:
+          ARMA_HOST: ${{ secrets.ARMA_HOST }}
+          ARMA_QUERY_PORT: ${{ secrets.ARMA_QUERY_PORT }}
+          ARMA_GIVEN_PORT_ONLY: 'true'
+        run: node scripts/update-arma-status.cjs
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add arma-status.json
+          git diff --cached --quiet || git commit -m "chore: update arma-status.json"
+          git push
