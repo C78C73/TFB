@@ -12,6 +12,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# NPM lockfiles (server scaffolding is optional)
+package-lock.json
+server/package-lock.json
+
 # OS cruft
 .DS_Store
 Thumbs.db
