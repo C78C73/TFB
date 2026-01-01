@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1767229420716,
+  "timestamp": 1767237052720,
   "state": {
     "name": "Task Force Black",
     "map": "#AR-Editor_Mission_GM_Kolguyev_Name",
     "password": false,
     "numplayers": 0,
     "maxplayers": 40,
-    "ping": 49,
+    "ping": 8,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.6.0.95"
