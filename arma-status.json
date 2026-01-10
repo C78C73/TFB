@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1768088616495,
+  "timestamp": 1768089019553,
   "state": {
     "name": "Task Force Black",
     "map": "#AR-Campaign_HQC_ScenarioName_Arland",
     "password": false,
-    "numplayers": 0,
+    "numplayers": 1,
     "maxplayers": 40,
-    "ping": 56,
+    "ping": 78,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.6.0.95"
