@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1768101011399,
+  "timestamp": 1768105019440,
   "state": {
     "name": "Task Force Black",
     "map": "#AR-Editor_Mission_GM_Arland_Name",
     "password": false,
     "numplayers": 4,
     "maxplayers": 40,
-    "ping": 18,
+    "ping": 27,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.6.0.95"
