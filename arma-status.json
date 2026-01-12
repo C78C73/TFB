@@ -1,11 +1,11 @@
 {
   "ok": true,
-  "timestamp": 1768247537080,
+  "timestamp": 1768247883380,
   "state": {
     "name": "Task Force Black",
     "map": "#AR-Editor_Mission_GM_Eden_Name",
     "password": false,
-    "numplayers": 0,
+    "numplayers": 1,
     "maxplayers": 40,
     "ping": 72,
     "connect": "66.23.233.101:47371",
