@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1779839027235,
+  "timestamp": 1779846654643,
   "state": {
     "name": "Task Force Black",
     "map": "Worthy Islands - Game Master Mode",
     "password": false,
-    "numplayers": 4,
+    "numplayers": 8,
     "maxplayers": 40,
-    "ping": 8,
+    "ping": 13,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.6.0.119"
