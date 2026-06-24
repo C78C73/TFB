@@ -1,15 +1,5 @@
 {
-  "ok": true,
-  "timestamp": 1782339073394,
-  "state": {
-    "name": "Task Force Black",
-    "map": "Game Master - Mogadishu",
-    "password": false,
-    "numplayers": 0,
-    "maxplayers": 40,
-    "ping": 26,
-    "connect": "66.23.233.101:47371",
-    "queryPort": 3001,
-    "version": "1.7.0.49"
-  }
+  "ok": false,
+  "timestamp": 1782343221815,
+  "error": "Failed all 1 attempts"
 }
