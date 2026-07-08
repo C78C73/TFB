@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1783540078782,
+  "timestamp": 1783543629095,
   "state": {
     "name": "Task Force Black",
-    "map": "Game Master - Mogadishu",
+    "map": "GameMaster Anizay",
     "password": false,
-    "numplayers": 0,
+    "numplayers": 3,
     "maxplayers": 40,
-    "ping": 41,
+    "ping": 77,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.7.0.54"
