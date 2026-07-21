@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1784673488901,
+  "timestamp": 1784676935804,
   "state": {
     "name": "Task Force Black",
     "map": "WARFARE GM VIN DRIN DOP",
     "password": false,
-    "numplayers": 4,
+    "numplayers": 2,
     "maxplayers": 40,
-    "ping": 8,
+    "ping": 56,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.7.0.54"
