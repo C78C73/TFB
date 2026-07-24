@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1784882349073,
+  "timestamp": 1784889326113,
   "state": {
     "name": "Task Force Black",
     "map": "WOW | VIETNAM",
     "password": false,
-    "numplayers": 0,
+    "numplayers": 1,
     "maxplayers": 40,
-    "ping": 31,
+    "ping": 9,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.7.0.54"
