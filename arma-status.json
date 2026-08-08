@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1786146779119,
+  "timestamp": 1786149278628,
   "state": {
     "name": "Task Force Black",
     "map": "T.B.N(RTS)-GameMaster",
     "password": false,
-    "numplayers": 3,
+    "numplayers": 7,
     "maxplayers": 40,
-    "ping": 12,
+    "ping": 41,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.7.0.54"
