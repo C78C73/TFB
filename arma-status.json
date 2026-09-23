@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1790145631355,
+  "timestamp": 1790165177382,
   "state": {
     "name": "Task Force Black",
     "map": "Vin Drin Dop",
     "password": false,
     "numplayers": 0,
     "maxplayers": 40,
-    "ping": 62,
+    "ping": 57,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.8.0.13"
