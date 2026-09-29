@@ -1,13 +1,13 @@
 {
   "ok": true,
-  "timestamp": 1790712060932,
+  "timestamp": 1790724717091,
   "state": {
     "name": "Task Force Black Russo-Ukraine Stories",
     "map": "Zimnitrita - Game Master",
     "password": false,
     "numplayers": 0,
     "maxplayers": 40,
-    "ping": 18,
+    "ping": 38,
     "connect": "66.23.233.101:47371",
     "queryPort": 3001,
     "version": "1.8.0.13"
